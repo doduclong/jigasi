@@ -17,6 +17,7 @@
  */
 package org.jitsi.jigasi.transcription;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.*;
 import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.EncoderContext;
@@ -25,6 +26,8 @@ import org.eclipse.jetty.websocket.api.*;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.client.*;
 import org.jitsi.jigasi.constant.EventWsAIEnum;
+import org.jitsi.jigasi.transcription.config.ClientConfig;
+import org.jitsi.jigasi.transcription.config.DataClientConfig;
 import org.json.*;
 import org.jitsi.jigasi.*;
 import org.jitsi.utils.logging.*;
@@ -263,6 +266,24 @@ public class VoskTranscriptionService
         @OnWebSocketConnect
         public void onConnect(Session session)
         {
+            try {
+                latch.countDown();
+                logger.info("opened connection");
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                ClientConfig clientConfig = ClientConfig
+                        .builder()
+                        .type(EventWsAIEnum.EVENT_RECEIVE_CLIENT_CONFIG.getName())
+                        .data(DataClientConfig
+                                .builder()
+                                .is_recording(true)
+                                .build())
+                        .build();
+                String json = objectMapper.writeValueAsString(clientConfig);
+                session.getRemote().sendString(json);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             this.session = session;
         }
 
@@ -271,6 +292,7 @@ public class VoskTranscriptionService
         {
             boolean partial = true;
             String result = "";
+            logger.info(msg);
             if (logger.isDebugEnabled())
                 logger.debug(debugName + "Recieved response: " + msg);
             JSONObject obj = new JSONObject(msg);
@@ -319,30 +341,26 @@ public class VoskTranscriptionService
         {
             try
             {
-                if (sampleRate < 0)
-                {
-                    sampleRate = request.getFormat().getSampleRate();
-                    session.getRemote().sendString("{\"config\" : {\"sample_rate\" : " + sampleRate + " }}");
-                }
-                ByteBuffer audioBuffer = ByteBuffer.wrap(request.getAudio());
-                session.getRemote().sendBytes(audioBuffer);
+//                if (sampleRate < 0)
+//                {
+//                    sampleRate = request.getFormat().getSampleRate();
+//                    session.getRemote().sendString("{\"config\" : {\"sample_rate\" : " + sampleRate + " }}");
+//                }
+//                ByteBuffer audioBuffer = ByteBuffer.wrap(request.getAudio());
+//                session.getRemote().sendBytes(audioBuffer);
 
-//                latch.await();
-//                BsonDocument document = new BsonDocument();
-//                document.put("type", new BsonString(EventWsAIEnum.EVENT_RECEIVE_ADMIN_PUSH_AUDIO.getName()));
-//
-//                BsonDocument data = new BsonDocument();
-//                data.put("blob_data", new BsonBinary(request.getAudio()));
-//                data.put("is_end_streaming", new BsonBoolean(false));
-//                data.put("segment_id", new BsonString(String.valueOf(audioSendToVoiceAI.getData().getSegment_id())));
-//                document.put("data", data);
-//                BasicOutputBuffer buffer = new BasicOutputBuffer();
-//                BsonDocumentCodec codec = new BsonDocumentCodec();
-//
-//                codec.encode(new BsonBinaryWriter(buffer), document, EncoderContext.builder().isEncodingCollectibleDocument(true).build());
-//                byte[] serializedData = buffer.toByteArray();
-//
-//                session.getRemote().send(serializedData);
+                BsonDocument document = new BsonDocument();
+                document.put("type", new BsonString(EventWsAIEnum.EVENT_RECEIVE_ADMIN_PUSH_AUDIO.getName()));
+                BsonDocument data = new BsonDocument();
+                data.put("blob_data", new BsonBinary(request.getAudio()));
+                data.put("is_end_streaming", new BsonBoolean(false));
+                data.put("segment_id", new BsonString(String.valueOf(0)));
+                document.put("data", data);
+                BasicOutputBuffer buffer = new BasicOutputBuffer();
+                BsonDocumentCodec codec = new BsonDocumentCodec();
+                codec.encode(new BsonBinaryWriter(buffer), document, EncoderContext.builder().isEncodingCollectibleDocument(true).build());
+                byte[] serializedData = buffer.toByteArray();
+                session.getRemote().sendBytes(ByteBuffer.wrap(serializedData));
 
             }
             catch (Exception e)
@@ -407,11 +425,40 @@ public class VoskTranscriptionService
         {
             try
             {
-                AudioFormat format = request.getFormat();
-                // session.getRemote().sendString("{\"config\" : {\"sample_rate\" : " + format.getSampleRate() + "}}");
-                ByteBuffer audioBuffer = ByteBuffer.wrap(request.getAudio());
-                session.getRemote().sendBytes(audioBuffer);
-                session.getRemote().sendString(EOF_MESSAGE);
+//                AudioFormat format = request.getFormat();
+//                session.getRemote().sendString("{\"config\" : {\"sample_rate\" : " + format.getSampleRate() + "}}");
+//                ByteBuffer audioBuffer = ByteBuffer.wrap(request.getAudio());
+//                session.getRemote().sendBytes(audioBuffer);
+//                session.getRemote().sendString(EOF_MESSAGE);
+
+                latch.countDown();
+                //log.info("opened connection");
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                ClientConfig clientConfig = ClientConfig
+                        .builder()
+                        .type(EventWsAIEnum.EVENT_RECEIVE_CLIENT_CONFIG.getName())
+                        .data(DataClientConfig
+                                .builder()
+                                .is_recording(true)
+                                .build())
+                        .build();
+                String json = objectMapper.writeValueAsString(clientConfig);
+                session.getRemote().sendString(json);
+
+                BsonDocument document = new BsonDocument();
+                document.put("type", new BsonString(EventWsAIEnum.EVENT_RECEIVE_ADMIN_PUSH_AUDIO.getName()));
+                BsonDocument data = new BsonDocument();
+                data.put("blob_data", new BsonBinary(request.getAudio()));
+                data.put("is_end_streaming", new BsonBoolean(false));
+                data.put("segment_id", new BsonString(String.valueOf(0)));
+                document.put("data", data);
+                BasicOutputBuffer buffer = new BasicOutputBuffer();
+                BsonDocumentCodec codec = new BsonDocumentCodec();
+                codec.encode(new BsonBinaryWriter(buffer), document, EncoderContext.builder().isEncodingCollectibleDocument(true).build());
+                byte[] serializedData = buffer.toByteArray();
+                session.getRemote().sendBytes(ByteBuffer.wrap(serializedData));
+
             }
             catch (IOException e)
             {
@@ -422,6 +469,7 @@ public class VoskTranscriptionService
         @OnWebSocketMessage
         public void onMessage(String msg)
         {
+            logger.info(msg);
             result.append("Xin chao moi nguoi minh la Long day");
 
             result.append('\n');

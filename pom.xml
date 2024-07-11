@@ -148,7 +148,6 @@
       <artifactId>Java-WebSocket</artifactId>
       <version>1.5.6</version>
     </dependency>
-
     <!-- org.jitsi -->
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -395,6 +394,12 @@
       <scope>runtime</scope>
     </dependency>
 
+<!--    <dependency>-->
+<!--      <groupId>org.projectlombok</groupId>-->
+<!--      <artifactId>lombok</artifactId>-->
+<!--      <optional>true</optional>-->
+<!--    </dependency>-->
+
     <!-- For logging via Logback (remove slf4j-jdk14 when enabling this)
     Add as the first lines of main(String[] args):
     SLF4JBridgeHandler.removeHandlersForRootLogger();
@@ -449,6 +454,12 @@
           <version>${jicoco.version}</version>
           <scope>compile</scope>
       </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.26</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -464,6 +475,18 @@
           </compilerArgs>
         </configuration>
       </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--        <configuration>-->
+<!--          <excludes>-->
+<!--            <exclude>-->
+<!--              <groupId>org.projectlombok</groupId>-->
+<!--              <artifactId>lombok</artifactId>-->
+<!--            </exclude>-->
+<!--          </excludes>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
