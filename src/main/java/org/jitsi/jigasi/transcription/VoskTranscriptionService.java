@@ -307,6 +307,8 @@ public class VoskTranscriptionService
 
                 // Lấy giá trị "predict_segment" từ đối tượng "data"
                 message = dataObject.getString("predict_segment");
+
+                logger.info(message);
             }catch (Exception e){
                 //logger.info(msg);
             }
@@ -462,18 +464,18 @@ public class VoskTranscriptionService
                 String json = objectMapper.writeValueAsString(clientConfig);
                 session.getRemote().sendString(json);
 
-                BsonDocument document = new BsonDocument();
-                document.put("type", new BsonString(EventWsAIEnum.EVENT_RECEIVE_ADMIN_PUSH_AUDIO.getName()));
-                BsonDocument data = new BsonDocument();
-                data.put("blob_data", new BsonBinary(request.getAudio()));
-                data.put("is_end_streaming", new BsonBoolean(false));
-                data.put("segment_id", new BsonString(String.valueOf(0)));
-                document.put("data", data);
-                BasicOutputBuffer buffer = new BasicOutputBuffer();
-                BsonDocumentCodec codec = new BsonDocumentCodec();
-                codec.encode(new BsonBinaryWriter(buffer), document, EncoderContext.builder().isEncodingCollectibleDocument(true).build());
-                byte[] serializedData = buffer.toByteArray();
-                session.getRemote().sendBytes(ByteBuffer.wrap(serializedData));
+//                BsonDocument document = new BsonDocument();
+//                document.put("type", new BsonString(EventWsAIEnum.EVENT_RECEIVE_ADMIN_PUSH_AUDIO.getName()));
+//                BsonDocument data = new BsonDocument();
+//                data.put("blob_data", new BsonBinary(request.getAudio()));
+//                data.put("is_end_streaming", new BsonBoolean(false));
+//                data.put("segment_id", new BsonString(String.valueOf(0)));
+//                document.put("data", data);
+//                BasicOutputBuffer buffer = new BasicOutputBuffer();
+//                BsonDocumentCodec codec = new BsonDocumentCodec();
+//                codec.encode(new BsonBinaryWriter(buffer), document, EncoderContext.builder().isEncodingCollectibleDocument(true).build());
+//                byte[] serializedData = buffer.toByteArray();
+//                session.getRemote().sendBytes(ByteBuffer.wrap(serializedData));
 
             }
             catch (IOException e)
