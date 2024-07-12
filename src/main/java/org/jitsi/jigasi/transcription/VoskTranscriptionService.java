@@ -295,11 +295,18 @@ public class VoskTranscriptionService
             boolean partial = true;
             String result = "";
             logger.info(msg);
-            logger.info("log text"+ msg);
-            logger.info("text{\"partial\" : \"" + msg + "\"}");
+            logger.info("log tren"+ msg);
+            //logger.info("text{\"partial\" : \"" + msg + "\"}");
             if (logger.isDebugEnabled())
                 logger.debug(debugName + "Recieved response: " + msg);
-            JSONObject obj = new JSONObject("{\"partial\" : \"" + "xin chao" + "\"}");
+            JSONObject jsonObject = new JSONObject(msg);
+
+            // Lấy đối tượng "data" từ JSON chính
+            JSONObject dataObject = jsonObject.getJSONObject("data");
+
+            // Lấy giá trị "predict_segment" từ đối tượng "data"
+            String predictSegment = dataObject.getString("predict_segment");
+            JSONObject obj = new JSONObject("{\"partial\" : \"" + predictSegment + "\"}");
             if (obj.has("partial"))
             {
                 result = obj.getString("partial");
@@ -473,7 +480,7 @@ public class VoskTranscriptionService
         @OnWebSocketMessage
         public void onMessage(String msg)
         {
-            logger.info("text{\"partial\" : \"" + msg + "\"}");
+            logger.info("log duoi" + msg);
             result.append("Xin chao moi nguoi minh la Long day");
             //result.append("text{\"partial\" : \"" + msg + "\"}");
             result.append('\n');
