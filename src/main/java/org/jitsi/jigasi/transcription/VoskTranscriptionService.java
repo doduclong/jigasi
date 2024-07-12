@@ -297,7 +297,7 @@ public class VoskTranscriptionService
             logger.info("log text"+ msg);
             if (logger.isDebugEnabled())
                 logger.debug(debugName + "Recieved response: " + msg);
-            JSONObject obj = new JSONObject(msg);
+            JSONObject obj = new JSONObject("text{\"partial\" : \"" + msg + "\"}");
             if (obj.has("partial"))
             {
                 result = obj.getString("partial");
@@ -472,8 +472,8 @@ public class VoskTranscriptionService
         public void onMessage(String msg)
         {
             logger.info("text{\"partial\" : \"" + msg + "\"}");
-            //result.append("Xin chao moi nguoi minh la Long day");
-            result.append("text{\"partial\" : \"" + msg + "\"}");
+            result.append("Xin chao moi nguoi minh la Long day");
+            //result.append("text{\"partial\" : \"" + msg + "\"}");
             result.append('\n');
         }
 
