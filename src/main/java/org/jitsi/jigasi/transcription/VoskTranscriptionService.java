@@ -300,13 +300,18 @@ public class VoskTranscriptionService
             if (logger.isDebugEnabled())
                 logger.debug(debugName + "Recieved response: " + msg);
             JSONObject jsonObject = new JSONObject(msg);
+            String message = "Hello";
+            try{
+                // Lấy đối tượng "data" từ JSON chính
+                JSONObject dataObject = jsonObject.getJSONObject("data");
 
-            // Lấy đối tượng "data" từ JSON chính
-            JSONObject dataObject = jsonObject.getJSONObject("data");
+                // Lấy giá trị "predict_segment" từ đối tượng "data"
+                message = dataObject.getString("predict_segment");
+            }catch (Exception e){
+                //logger.info(msg);
+            }
 
-            // Lấy giá trị "predict_segment" từ đối tượng "data"
-            String predictSegment = dataObject.getString("predict_segment");
-            JSONObject obj = new JSONObject("{\"partial\" : \"" + predictSegment + "\"}");
+            JSONObject obj = new JSONObject("{\"partial\" : \"" + message + "\"}");
             if (obj.has("partial"))
             {
                 result = obj.getString("partial");
@@ -481,7 +486,7 @@ public class VoskTranscriptionService
         public void onMessage(String msg)
         {
             logger.info("log duoi" + msg);
-            result.append("Xin chao moi nguoi minh la Long day");
+            result.append("text{\"partial\" : \"" + "Long day" + "\"}");
             //result.append("text{\"partial\" : \"" + msg + "\"}");
             result.append('\n');
         }
