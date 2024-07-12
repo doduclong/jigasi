@@ -294,7 +294,9 @@ public class VoskTranscriptionService
         {
             boolean partial = true;
             String result = "";
+            logger.info(msg);
             logger.info("log text"+ msg);
+            logger.info("text{\"partial\" : \"" + msg + "\"}");
             if (logger.isDebugEnabled())
                 logger.debug(debugName + "Recieved response: " + msg);
             JSONObject obj = new JSONObject("text{\"partial\" : \"" + msg + "\"}");
