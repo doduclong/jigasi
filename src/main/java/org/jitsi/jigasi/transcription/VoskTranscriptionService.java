@@ -299,7 +299,7 @@ public class VoskTranscriptionService
             logger.info("text{\"partial\" : \"" + msg + "\"}");
             if (logger.isDebugEnabled())
                 logger.debug(debugName + "Recieved response: " + msg);
-            JSONObject obj = new JSONObject("{\"partial\" : \"" + msg + "\"}");
+            JSONObject obj = new JSONObject("{\"partial\" : \"" + "xin chao" + "\"}");
             if (obj.has("partial"))
             {
                 result = obj.getString("partial");
