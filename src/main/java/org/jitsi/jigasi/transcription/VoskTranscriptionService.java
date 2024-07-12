@@ -294,13 +294,10 @@ public class VoskTranscriptionService
         {
             boolean partial = true;
             String result = "";
-            logger.info(msg);
-            logger.info("log tren"+ msg);
-            //logger.info("text{\"partial\" : \"" + msg + "\"}");
             if (logger.isDebugEnabled())
                 logger.debug(debugName + "Recieved response: " + msg);
             JSONObject jsonObject = new JSONObject(msg);
-            String message = "Hello";
+            String message = "";
             try{
                 // Lấy đối tượng "data" từ JSON chính
                 JSONObject dataObject = jsonObject.getJSONObject("data");
