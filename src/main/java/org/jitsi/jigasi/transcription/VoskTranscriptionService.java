@@ -114,7 +114,7 @@ public class VoskTranscriptionService
 //        }
 //        websocketUrl = (String) urlObject;
         websocketUrl = "ws://103.252.1.138:18181/streaming/" + participant.getRoomId();
-        logger.info("ws: " + websocketUrl);
+        //logger.info("ws: " + websocketUrl);
     }
 
     /**
