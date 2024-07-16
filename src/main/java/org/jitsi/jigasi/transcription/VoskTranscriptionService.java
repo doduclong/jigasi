@@ -98,6 +98,8 @@ public class VoskTranscriptionService
             websocketUrl = websocketUrlConfig;
             return;
         }
+        logger.info(websocketUrlConfig);
+        logger.info(participant.getDebugName());
 
         org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
         Object obj = jsonParser.parse(websocketUrlConfig);
@@ -473,7 +475,6 @@ public class VoskTranscriptionService
 //                codec.encode(new BsonBinaryWriter(buffer), document, EncoderContext.builder().isEncodingCollectibleDocument(true).build());
 //                byte[] serializedData = buffer.toByteArray();
 //                session.getRemote().sendBytes(ByteBuffer.wrap(serializedData));
-
             }
             catch (IOException e)
             {

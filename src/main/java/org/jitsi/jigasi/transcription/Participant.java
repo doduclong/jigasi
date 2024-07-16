@@ -564,10 +564,12 @@ public class Participant
 
         if (USE_LOCAL_BUFFER)
         {
+            logger.info("--------------------buffer");
             buffer(audio);
         }
         else
         {
+            logger.info("--------------------send request");
             sendRequest(audio);
         }
     }
