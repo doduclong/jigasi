@@ -53,7 +53,7 @@ public class Participant
      * packets per second. Each packet will thus contain
      * 96000 / 50 = 1920 bytes
      */
-    private static final int EXPECTED_AUDIO_LENGTH = 1920 * 3;
+    private static final int EXPECTED_AUDIO_LENGTH = 1920;
 
     /**
      * The size of the local buffer. A single packet is expected to contain
@@ -118,7 +118,7 @@ public class Participant
     /**
      * A buffer which is used to locally store audio before sending
      */
-    private ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+    private ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE * 3);
 
     /**
      * The AudioFormat of the audio being read. It is assumed to not change
@@ -665,7 +665,7 @@ public class Participant
                }
 
                int spaceLeft = buffer.limit() - buffer.position();
-               if (spaceLeft == EXPECTED_AUDIO_LENGTH)
+               if (spaceLeft < EXPECTED_AUDIO_LENGTH)
                {
                    sendRequest(buffer.array());
                    // we need to cast here to keep compatability when moving between java8 and java11
