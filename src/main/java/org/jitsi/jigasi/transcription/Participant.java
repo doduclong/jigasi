@@ -564,12 +564,12 @@ public class Participant
 
         if (USE_LOCAL_BUFFER)
         {
-            logger.info("--------------------buffer");
+            //logger.info("--------------------buffer");
             buffer(audio);
         }
         else
         {
-            logger.info("--------------------send request");
+            //logger.info("--------------------send request");
             sendRequest(audio);
         }
     }
@@ -650,12 +650,14 @@ public class Participant
                }
                catch (BufferOverflowException | ReadOnlyBufferException e)
                {
+                   logger.info("BufferOverflowException");
                    sendRequest(audio);
                }
 
                int spaceLeft = buffer.limit() - buffer.position();
                if (spaceLeft < EXPECTED_AUDIO_LENGTH)
                {
+                   logger.info("spaceLeft");
                    sendRequest(buffer.array());
                    // we need to cast here to keep compatability when moving between java8 and java11
                    ((Buffer) buffer).clear();

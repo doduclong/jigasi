@@ -99,7 +99,7 @@ public class VoskTranscriptionService
             return;
         }
         logger.info(websocketUrlConfig);
-        logger.info(participant.getDebugName());
+        logger.info("participant "+ participant.getDebugName());
 
         org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
         Object obj = jsonParser.parse(websocketUrlConfig);
@@ -196,6 +196,7 @@ public class VoskTranscriptionService
             generateWebsocketUrl(participant);
             VoskWebsocketStreamingSession streamingSession = new VoskWebsocketStreamingSession(
                     participant.getDebugName());
+            logger.info("info participant " + participant.getDebugName());
             streamingSession.transcriptionTag = participant.getTranslationLanguage();
             if (streamingSession.transcriptionTag == null)
             {
