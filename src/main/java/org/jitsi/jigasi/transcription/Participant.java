@@ -206,6 +206,16 @@ public class Participant
         return roomId + "/" + _chatMember.getName();
     }
 
+    String getRoomId()
+    {
+        String roomId = chatMember.getChatRoom().getIdentifier();
+        if (roomId.contains("@"))
+        {
+            roomId = roomId.substring(0, roomId.indexOf("@"));
+        }
+        return roomId;
+    }
+
     /**
      * @return the string to uses when identifying this participant in the
      * transcript (if a display name wasn't specifically set we use the id or

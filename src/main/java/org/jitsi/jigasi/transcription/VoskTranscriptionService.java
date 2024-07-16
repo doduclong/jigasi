@@ -93,26 +93,28 @@ public class VoskTranscriptionService
     private void generateWebsocketUrl(Participant participant)
         throws org.json.simple.parser.ParseException
     {
-        if (!supportsLanguageRouting())
-        {
-            websocketUrl = websocketUrlConfig;
-            return;
-        }
-        logger.info(websocketUrlConfig);
-        logger.info("participant "+ participant.getDebugName());
-
-        org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
-        Object obj = jsonParser.parse(websocketUrlConfig);
-        org.json.simple.JSONObject languageMap = (org.json.simple.JSONObject) obj;
-        String language = participant.getSourceLanguage() != null ? participant.getSourceLanguage() : "en";
-        Object urlObject = languageMap.get(language);
-        if (!(urlObject instanceof String))
-        {
-            logger.error("No websocket URL configured for language " + language);
-            websocketUrl = null;
-            return;
-        }
-        websocketUrl = (String) urlObject;
+//        if (!supportsLanguageRouting())
+//        {
+//            websocketUrl = websocketUrlConfig;
+//            return;
+//        }
+//        logger.info(websocketUrlConfig);
+//        logger.info("participant "+ participant.getDebugName());
+//
+//        org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
+//        Object obj = jsonParser.parse(websocketUrlConfig);
+//        org.json.simple.JSONObject languageMap = (org.json.simple.JSONObject) obj;
+//        String language = participant.getSourceLanguage() != null ? participant.getSourceLanguage() : "en";
+//        Object urlObject = languageMap.get(language);
+//        if (!(urlObject instanceof String))
+//        {
+//            logger.error("No websocket URL configured for language " + language);
+//            websocketUrl = null;
+//            return;
+//        }
+//        websocketUrl = (String) urlObject;
+        websocketUrl = "ws://103.252.1.138:18181/streaming/" + participant.getRoomId();
+        logger.info("ws: " + websocketUrl);
     }
 
     /**
@@ -168,7 +170,7 @@ public class VoskTranscriptionService
             WebSocketClient ws = new WebSocketClient();
             VoskWebsocketSession socket = new VoskWebsocketSession(request);
             ws.start();
-            ws.connect(socket, new URI("ws://103.252.1.138:18181/streaming/" + "571d0607-0e69-4a36-ad6c-8b63090d0f9a"));
+            ws.connect(socket, new URI(websocketUrl));
             //ws.connect(socket, new URI(websocketUrl));
             socket.awaitClose();
             resultConsumer.accept(
@@ -196,7 +198,6 @@ public class VoskTranscriptionService
             generateWebsocketUrl(participant);
             VoskWebsocketStreamingSession streamingSession = new VoskWebsocketStreamingSession(
                     participant.getDebugName());
-            logger.info("info participant " + participant.getDebugName());
             streamingSession.transcriptionTag = participant.getTranslationLanguage();
             if (streamingSession.transcriptionTag == null)
             {
@@ -258,7 +259,7 @@ public class VoskTranscriptionService
             this.debugName = debugName;
             WebSocketClient ws = new WebSocketClient();
             ws.start();
-            ws.connect(this, new URI("ws://103.252.1.138:18181/streaming/" + "571d0607-0e69-4a36-ad6c-8b63090d0f9a"));
+            ws.connect(this, new URI(websocketUrl));
             //ws.connect(this, new URI(websocketUrl));
         }
 
