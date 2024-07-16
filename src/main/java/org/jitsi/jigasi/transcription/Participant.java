@@ -665,7 +665,7 @@ public class Participant
                }
 
                int spaceLeft = buffer.limit() - buffer.position();
-               if (spaceLeft < EXPECTED_AUDIO_LENGTH)
+               if (spaceLeft == EXPECTED_AUDIO_LENGTH)
                {
                    sendRequest(buffer.array());
                    // we need to cast here to keep compatability when moving between java8 and java11
