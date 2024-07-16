@@ -118,7 +118,7 @@ public class Participant
     /**
      * A buffer which is used to locally store audio before sending
      */
-    private ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE * 2);
+    private ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
     /**
      * The AudioFormat of the audio being read. It is assumed to not change
