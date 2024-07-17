@@ -569,6 +569,7 @@ public class Participant
         {
             audioFormat = (AudioFormat) buffer.getFormat();
         }
+        logger.info("give buffer "+audioFormat.getSampleRate());
 
         byte[] audio = (byte[]) buffer.getData();
 
@@ -693,6 +694,7 @@ public class Participant
 
             if (session != null && !session.ended())
             {
+                logger.info("send request "+audioFormat.getSampleRate());
                 session.sendRequest(request);
             }
             else if (transcriber.getTranscriptionService().supportsStreamRecognition())
