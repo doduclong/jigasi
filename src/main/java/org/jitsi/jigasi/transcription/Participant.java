@@ -569,10 +569,11 @@ public class Participant
         {
             audioFormat = (AudioFormat) buffer.getFormat();
         }
-        logger.info("give buffer "+audioFormat.getSampleRate());
+        logger.info("give buffer "+audioFormat.toString());
 
         byte[] audio = (byte[]) buffer.getData();
 
+        audio = downsample(audio, audioFormat.getSampleRate(), 16000, audioFormat.getChannels(), audioFormat.getSampleSizeInBits());
         if (USE_LOCAL_BUFFER)
         {
             //logger.info("--------------------buffer");
@@ -583,6 +584,27 @@ public class Participant
             //logger.info("--------------------send request");
             sendRequest(audio);
         }
+    }
+
+    public static byte[] downsample(byte[] audioBytes, double originalSampleRate, double targetSampleRate, int channels, int sampleSizeInBits) {
+        int originalSamples = audioBytes.length / (sampleSizeInBits / 8) / channels;
+        int targetSamples = (int) ((targetSampleRate / originalSampleRate) * originalSamples);
+
+        byte[] downsampledBytes = new byte[targetSamples * (sampleSizeInBits / 8) * channels];
+
+        int sampleInterval = (int) (originalSampleRate / targetSampleRate);
+        for (int i = 0, j = 0; i < targetSamples && j < audioBytes.length; i++, j += sampleInterval * (sampleSizeInBits / 8) * channels) {
+            for (int ch = 0; ch < channels; ch++) {
+                int byteIndexOriginal = j + ch * (sampleSizeInBits / 8);
+                int byteIndexTarget = i * (sampleSizeInBits / 8) * channels + ch * (sampleSizeInBits / 8);
+
+                for (int b = 0; b < sampleSizeInBits / 8; b++) {
+                    downsampledBytes[byteIndexTarget + b] = audioBytes[byteIndexOriginal + b];
+                }
+            }
+        }
+
+        return downsampledBytes;
     }
 
     @Override
@@ -694,7 +716,7 @@ public class Participant
 
             if (session != null && !session.ended())
             {
-                logger.info("send request "+audioFormat.getSampleRate());
+                logger.info("send request "+audioFormat.toString());
                 session.sendRequest(request);
             }
             else if (transcriber.getTranscriptionService().supportsStreamRecognition())
