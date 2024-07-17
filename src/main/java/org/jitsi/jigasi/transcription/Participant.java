@@ -61,7 +61,7 @@ public class Participant
      * 25 results in 20 ms * 25 packets = 500 ms of audio being buffered
      * locally before being send to the TranscriptionService
      */
-    private static final int BUFFER_SIZE = EXPECTED_AUDIO_LENGTH * 25;
+    private static final int BUFFER_SIZE = EXPECTED_AUDIO_LENGTH * 25 * 6;
 
     /**
      * Whether we should buffer locally before sending
@@ -118,7 +118,7 @@ public class Participant
     /**
      * A buffer which is used to locally store audio before sending
      */
-    private ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE * 3);
+    private ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
     /**
      * The AudioFormat of the audio being read. It is assumed to not change
