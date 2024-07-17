@@ -61,7 +61,7 @@ public class Participant
      * 25 results in 20 ms * 25 packets = 500 ms of audio being buffered
      * locally before being send to the TranscriptionService
      */
-    private static final int BUFFER_SIZE = EXPECTED_AUDIO_LENGTH * 25 * 6;
+    private static final int BUFFER_SIZE = EXPECTED_AUDIO_LENGTH * 25 * 4;
 
     /**
      * Whether we should buffer locally before sending
@@ -569,8 +569,6 @@ public class Participant
         {
             audioFormat = (AudioFormat) buffer.getFormat();
         }
-        logger.info("give buffer "+audioFormat.toString());
-
         byte[] audio = (byte[]) buffer.getData();
 
         audio = downsample(audio, audioFormat.getSampleRate(), 16000, audioFormat.getChannels(), audioFormat.getSampleSizeInBits());
@@ -683,7 +681,6 @@ public class Participant
                }
                catch (BufferOverflowException | ReadOnlyBufferException e)
                {
-                   logger.info("BufferOverflowException");
                    sendRequest(audio);
                }
 
@@ -716,7 +713,6 @@ public class Participant
 
             if (session != null && !session.ended())
             {
-                logger.info("send request "+audioFormat.toString());
                 session.sendRequest(request);
             }
             else if (transcriber.getTranscriptionService().supportsStreamRecognition())
