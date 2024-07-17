@@ -53,8 +53,7 @@ public class Participant
      * packets per second. Each packet will thus contain
      * 96000 / 50 = 1920 bytes
      */
-    //private static final int EXPECTED_AUDIO_LENGTH = 1920;
-    private static final int EXPECTED_AUDIO_LENGTH = 640;
+    private static final int EXPECTED_AUDIO_LENGTH = 1920;
 
     /**
      * The size of the local buffer. A single packet is expected to contain
